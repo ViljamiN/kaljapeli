@@ -1,6 +1,7 @@
 import pygame as pg
 from time import time
 
+
 class Timer:
 
     start_time = 1

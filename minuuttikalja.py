@@ -1,32 +1,25 @@
-import pygame as pg
-import sys
+import pygame
 from time import time
-from drawer import *
-from timer import Timer
-from player import Player
-from input_screen import *
-from player import *
-from game_logic import *
-from menu import *
+from classes.drawer import *
+from classes.timer import Timer
+from classes.player import Player
+from helper_functions import *
+from classes.player import *
+from classes.game_logic import *
 
 
 def main():
 
-    pg.init()      
-    surface_height = 700   
+    pygame.init()
+    surface_height = 700
     surface_width = 1200
-    main_surface = pg.display.set_mode((surface_width, surface_height))
+    main_surface = pygame.display.set_mode((surface_width, surface_height))
 
-
-    init_game(main_surface)
-
-
-    players = []
-    more_players = True
-    while more_players:
+    def manual_input():
         ask = "Press Enter for new player, or anything else to start"
-        fontobject = pg.font.Font(None,46)
-        main_surface.blit(fontobject.render(ask, 1, (255,255,255)), (main_surface.get_width()/2-fontobject.size(ask)[0]/2, main_surface.get_height()/2-75))
+        fontobject = pygame.font.Font(None, 46)
+        main_surface.blit(fontobject.render(ask, 1, (255, 255, 255)), (main_surface.get_width(
+        )/2-fontobject.size(ask)[0]/2, main_surface.get_height()/2-75))
         pygame.display.flip()
 
         for evt in pygame.event.get():
@@ -36,45 +29,86 @@ def main():
                     players.append(addPlayer(main_surface))
                 else:
                     more_players = False
-    
-    '''         
-    pg.mixer.init()
-    laser_beam_sound = pg.mixer.Sound("Tick.wav")
-    '''
 
-    oskari = Player('Oskari', 'male', 82000, 0.05, (0,255,0))
-    # niko = Player('Niko', 'male', 64500, 0.02, (200,0,100))
-    # nikolina = Player('Nikolina', 'female', 64500, 0.02, (200,50,100))
-    petsku = Player('Petsku', 'male', 90000, 0.053, (240,100,20))
-    # otto = Player('Otto', 'male', 70000, 0.1, (0,255,20))
-    late = Player('Late', 'male', 97000, 0.053, GREEN)
-    nikke = Player('Nikke', 'male', 65000, 0.053, RED)
-    camilla = Player('Camilla', 'female', 70000, 0.053, BLUE)
-    roosa = Player('Roosa' , 'female', 70000, 0.053, PURPLE)
+    def select_game_mode():
+        options = ["Minute Beer Mode - Lehtisaari",
+                   "Classic Minute Beer Mode",
+                   "Optimized BAC Mode"]
+        question = "Select game mode"
+        selection = 0
 
-    players.extend([late, oskari, nikke, camilla, roosa])
+        while True:
+            for evt in pygame.event.get():
+                if evt.type == KEYDOWN:
+                    if evt.key == K_LEFT:
+                        if selection == 0:
+                            selection = len(options) - 1
+                        else:
+                            selection -= 1
+                    elif evt.key == K_RIGHT:
+                        if selection == len(options) - 1:
+                            selection = 0
+                        else:
+                            selection += 1
+                    elif evt.key == K_RETURN:
+                        if selection == 0:
+                            return MinuteBeerModeLehtisaari(players)
+                        elif selection == 1:
+                            return ClassicMinuteBeerMode(players)
+                        elif selection == 2:
+                            return OptimizedBACMode(players)
 
-    # game_mode = ClassicMinuteBeerMode(players)
-    game_mode = OptimizedBACMode(players)
+            main_surface.fill((0, 0, 0))
+
+            for i in range(len(options)):
+                block_width = main_surface.get_width()/len(options)
+                block = pygame.Rect(i*block_width + 10,
+                                    main_surface.get_height()/2, block_width - 20, 75)
+                if i == selection:
+                    pygame.draw.rect(main_surface, (100, 100, 255), block, 3)
+                else:
+                    pygame.draw.rect(main_surface, (255, 255, 255), block, 1)
+                fontobject = pygame.font.Font(None, 40)
+                main_surface.blit(fontobject.render(options[i], 1, (255, 255, 255)), (
+                    i*block_width + block_width/2 - fontobject.size(options[i])[0]/2, main_surface.get_height()/2 + 25))
+
+            fontobject = pygame.font.Font(None, 40)
+            main_surface.blit(fontobject.render(question, 1, (255, 255, 255)), (main_surface.get_width(
+            )/2-fontobject.size(question)[0]/2, main_surface.get_height()/2-75))
+            pygame.display.flip()
+
+    players = []
+
+    # we take the initial players from a google sheet and add them to the list
+    players.extend()
+
+    more_players = True
+    while more_players:
+        manual_input()
+
+    # draw a screen where the user can choose a game mode
+    game_mode = None
+    while game_mode == None:
+        game_mode = select_game_mode(main_surface)
 
     drawer = Drawer(main_surface, players, game_mode)
 
     Timer.reset_clock()
     Timer.round_time = 5
-    #Count down loop
+
+    # Count down loop
     while Timer.get_elapsed_time() < Timer.round_time:
         game_mode.update_game()
         drawer.draw_count_down()
-        pg.display.flip()
+        pygame.display.flip()
 
     Timer.reset_clock()
     Timer.round_time = 20
-    #Main loop
+    # Main loop
     while True:
         game_mode.update_game()
         drawer.draw()
-        pg.display.flip()
-
+        pygame.display.flip()
 
 
 main()
