@@ -1,11 +1,9 @@
 import pygame
-from time import time
-from classes.drawer import *
-from classes.timer import Timer
-from classes.player import Player
+from drawer import *
+from timer import Timer
 from helper_functions import *
-from classes.player import *
-from classes.game_logic import *
+from player import *
+from game_logic import *
 
 
 def main():
@@ -78,10 +76,6 @@ def main():
             pygame.display.flip()
 
     players = []
-
-    # we take the initial players from a google sheet and add them to the list
-    players.extend()
-
     more_players = True
     while more_players:
         manual_input()

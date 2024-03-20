@@ -1,5 +1,5 @@
 from time import time
-from classes.timer import Timer
+from timer import Timer
 from helper_functions import *
 
 SIP_SIZE = 0.04

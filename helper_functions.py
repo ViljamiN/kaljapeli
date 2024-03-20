@@ -1,11 +1,5 @@
 import pygame
-import pygame.font
-import pygame.event
-import pygame.draw
-import string
 from pygame.locals import *
-import math
-from minuuttikalja import *
 
 
 '''

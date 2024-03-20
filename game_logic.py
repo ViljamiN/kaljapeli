@@ -1,5 +1,4 @@
-from time import time
-from classes.timer import Timer
+from timer import Timer
 
 MINUTE_BEER_LEHTISAARI = 0
 MINUTE_BEER = 1

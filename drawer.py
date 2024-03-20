@@ -1,7 +1,6 @@
 import pygame as pg
-from time import time
-from classes.timer import Timer
-import classes.game_logic as game_logic
+from timer import Timer
+import game_logic as game_logic
 from assets.colors import *
 
 RED = (255, 0, 0)
