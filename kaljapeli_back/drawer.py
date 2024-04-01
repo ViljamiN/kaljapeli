@@ -1,5 +1,5 @@
 import pygame as pg
-from timer import Timer
+import timer
 import game_logic as game_logic
 from assets.colors import *
 
@@ -69,11 +69,12 @@ class Drawer:
                     position_x += l.get_width() + 2*LINE_SPACE
 
     def draw_info_bar(self):
-        minutes = int((Timer.get_elapsed_time()) / 60)
-        seconds = int((Timer.get_elapsed_time()) % 60)
-        round_num = int((Timer.get_elapsed_time()) / Timer.round_time)
+        minutes = int((timer.get_elapsed_time()) / 60)
+        seconds = int((timer.Timer.get_elapsed_time()) % 60)
+        round_num = int((timer.Timer.get_elapsed_time()) /
+                        timer.Timer.round_time)
         self.info_bar = self.normal_font.render(
-            "{}:{:0>2} - {}s game - Round {}".format(minutes, seconds, Timer.round_time, round_num), 1, RED)
+            "{}:{:0>2} - {}s game - Round {}".format(minutes, seconds, timer.Timer.round_time, round_num), 1, RED)
 
         position_x = self.main_surface.get_width() / 2 - self.info_bar.get_width() / 2
         position_y = 0
