@@ -10,6 +10,7 @@ sessions = {}
 @app.route('/start_session', methods=['POST'])
 def start_session():
     data = request.get_json()
+    print(data)
     code = data.get('code')
     if code in sessions:
         return jsonify({'message': 'Session with code already exists'}), 400
@@ -22,6 +23,7 @@ def start_session():
 @app.route('/join_session', methods=['POST'])
 def join_session():
     data = request.get_json()
+    print(data)
     code = data.get('code')
     if code not in sessions:
         return jsonify({'message': 'Session with code does not exist'}), 404
