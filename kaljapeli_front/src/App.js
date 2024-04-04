@@ -28,18 +28,12 @@ function App() {
             .then((response) => {
                 console.log(response.data.message);
                 setHosting(true);
+                setCode(code);
             })
             .catch((error) => {
                 console.error("Error starting session:", error);
-                if (
-                    error.response &&
-                    error.response.data &&
-                    error.response.data.message
-                ) {
-                    setError(
-                        "Error starting session. Details: " +
-                            error.response.data.message
-                    );
+                if (error.response && error.response.data && error.response.data.message) {
+                    setError("Error starting session. Details: " + error.response.data.message);
                 } else {
                     setError("Unknown error. Please try again later.");
                 }
@@ -51,12 +45,7 @@ function App() {
             setError("Please enter a valid code.");
             return;
         }
-        if (
-            !personalDetails.name ||
-            !personalDetails.weight ||
-            !personalDetails.gender ||
-            !personalDetails.strength
-        ) {
+        if (!personalDetails.name || !personalDetails.weight || !personalDetails.gender || !personalDetails.strength) {
             setError("Please fill in all personal details.");
             return;
         }

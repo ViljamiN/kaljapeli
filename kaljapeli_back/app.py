@@ -36,13 +36,21 @@ def join_session():
         # Generate a unique ID for the participant
         participant_id = str(uuid.uuid4())
 
+        # Extract participant details from request data
+        # Assuming name is nested under 'personalDetails'
+        name = data.get('personalDetails').get('name')
+        weight = data.get('personalDetails').get('weight')
+        gender = data.get('personalDetails').get('gender')
+        strength = data.get('personalDetails').get('strength')
+        print("data", name, weight, gender, strength)
+
         # Save participant data to the list (simulate database)
         participant_data = {
             'id': participant_id,
-            'name': data.get('name'),
-            'weight': data.get('weight'),
-            'gender': data.get('gender'),
-            'strength': data.get('strength'),
+            'name': name,
+            'weight': weight,
+            'gender': gender,
+            'strength': strength,
             'session_code': code
         }
         participants_data.append(participant_data)
@@ -66,7 +74,15 @@ def get_participants():
         return jsonify({'message': 'Session with code does not exist'}), 404
     else:
         participants = sessions[code]['participants']
-        return jsonify({'participants': participants}), 200
+        # Fetch participant names from participants_data
+        participant_names = []
+        for participant_id in participants:
+            print("1", participant_id)
+            for participant in participants_data:
+                print("2", participant)
+                if participant['id'] == participant_id:
+                    participant_names.append(participant['name'])
+        return jsonify({'participants': participant_names}), 200
 
 
 if __name__ == '__main__':

@@ -4,10 +4,9 @@ import axios from "axios";
 const HostView = ({ sessionCode }) => {
     const [players, setPlayers] = useState(null);
 
-    // Function to fetch participants from the server
     const fetchParticipants = () => {
         axios
-            .get("http://localhost:5000/get_participants")
+            .get(`http://localhost:5000/get_participants?code=${sessionCode}`)
             .then((response) => {
                 console.log(response.data.participants);
                 setPlayers(response.data.participants);
@@ -18,15 +17,10 @@ const HostView = ({ sessionCode }) => {
     };
 
     useEffect(() => {
-        // Fetch participants when the component mounts
         fetchParticipants();
-
-        // Polling to fetch participants every 5 seconds
         const intervalId = setInterval(fetchParticipants, 5000);
-
-        // Cleanup function to clear the interval
         return () => clearInterval(intervalId);
-    }, []);
+    }, [sessionCode]);
 
     return (
         <div>
@@ -34,14 +28,17 @@ const HostView = ({ sessionCode }) => {
             {!players ? (
                 <p>No players have joined yet.</p>
             ) : (
-                <div>
-                    <h2>Players:</h2>
-                    <ul>
-                        {players.map((player) => (
-                            <li key={player}>{player}</li>
-                        ))}
-                    </ul>
-                </div>
+                (console.log(players),
+                (
+                    <div>
+                        <h2>Players:</h2>
+                        <ul>
+                            {players.map((player) => (
+                                <li key={player}>{player}</li>
+                            ))}
+                        </ul>
+                    </div>
+                ))
             )}
         </div>
     );
