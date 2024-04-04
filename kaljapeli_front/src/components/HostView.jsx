@@ -16,6 +16,18 @@ const HostView = ({ sessionCode }) => {
             });
     };
 
+    const handleStartGame = () => {
+        axios
+            .post("http://localhost:5000/start_game", { code: sessionCode })
+            .then((response) => {
+                console.log(response.data.message);
+                // Redirect to the game view
+            })
+            .catch((error) => {
+                console.error("Error starting game:", error);
+            });
+    };
+
     useEffect(() => {
         fetchParticipants();
         const intervalId = setInterval(fetchParticipants, 5000);
@@ -37,6 +49,9 @@ const HostView = ({ sessionCode }) => {
                                 <li key={player}>{player}</li>
                             ))}
                         </ul>
+                        // when the host clicks this button, the game will start and the players will be redirected to
+                        the game view
+                        <button onClick={handleStartGame}>Start session</button>
                     </div>
                 ))
             )}

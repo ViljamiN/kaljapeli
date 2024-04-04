@@ -1,6 +1,5 @@
 from time import time
-from timer import Timer
-from helper_functions import *
+from game_logic import Timer
 
 SIP_SIZE = 0.04
 MALE_FACTOR = 0.68
@@ -39,11 +38,3 @@ class Player:
         self.bac = real_bac if real_bac > 0 else 0
 
         self.time_left_drunk = self.bac / BAC_REDUCTION_PER_SECOND / 3600
-
-
-def addPlayer(disp):
-    name = Input_field(disp, "Name", False)
-    gender = Select_field(disp, "Gender", ["male", "female"])
-    weight = int(Input_field(disp, "Weight in kg", True)) * 1000
-    disp.fill((0, 0, 0))
-    return Player(name, gender, weight)

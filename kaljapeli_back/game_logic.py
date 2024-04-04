@@ -1,8 +1,23 @@
-from timer import Timer
+from time import time
 
 MINUTE_BEER_LEHTISAARI = 0
 MINUTE_BEER = 1
 OPTIMIZED_BAC = 2
+
+
+class Timer:
+
+    start_time = 1
+    round_time = 1
+
+    def reset_clock():
+        Timer.start_time = time()
+
+    def round_time_left():
+        return Timer.round_time - ((time() - Timer.start_time) % Timer.round_time)
+
+    def get_elapsed_time():
+        return time() - Timer.start_time
 
 
 class BasicLogic():

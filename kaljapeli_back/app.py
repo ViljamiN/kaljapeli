@@ -85,5 +85,18 @@ def get_participants():
         return jsonify({'participants': participant_names}), 200
 
 
+@app.route('/start_game', methods=['POST'])
+def start_game():
+    data = request.get_json()
+    code = data.get('code')
+    if code not in sessions:
+        return jsonify({'message': 'Session with code does not exist'}), 404
+    else:
+        print("Game session started")
+        # Start the game session
+        # You can add more game logic here
+        return jsonify({'message': 'Game session started successfully'}), 200
+
+
 if __name__ == '__main__':
     app.run(debug=True)
