@@ -1,23 +1,31 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-// This component is displayed when the user is hosting a Minute Beer
-// It gets the player names from the server and displays them
-
-const HostView = () => {
-    //get the players from the server
+const HostView = ({ sessionCode }) => {
     const [players, setPlayers] = useState(null);
 
-    useEffect(() => {
+    // Function to fetch participants from the server
+    const fetchParticipants = () => {
         axios
             .get("http://localhost:5000/get_participants")
             .then((response) => {
-                console.log(response.data.players);
-                setPlayers(response.data.players);
+                console.log(response.data.participants);
+                setPlayers(response.data.participants);
             })
             .catch((error) => {
                 console.error("Error getting players:", error);
             });
+    };
+
+    useEffect(() => {
+        // Fetch participants when the component mounts
+        fetchParticipants();
+
+        // Polling to fetch participants every 5 seconds
+        const intervalId = setInterval(fetchParticipants, 5000);
+
+        // Cleanup function to clear the interval
+        return () => clearInterval(intervalId);
     }, []);
 
     return (

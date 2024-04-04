@@ -31,11 +31,18 @@ function App() {
             })
             .catch((error) => {
                 console.error("Error starting session:", error);
-                setError(
-                    "Error starting session. Details:",
-                    error.response.data.message ||
-                        "Unknown error. Please try again later."
-                );
+                if (
+                    error.response &&
+                    error.response.data &&
+                    error.response.data.message
+                ) {
+                    setError(
+                        "Error starting session. Details: " +
+                            error.response.data.message
+                    );
+                } else {
+                    setError("Unknown error. Please try again later.");
+                }
             });
     };
 
@@ -176,7 +183,7 @@ function App() {
                     {error && <p style={{ color: "red" }}>{error}</p>}
                 </div>
             ) : hosting ? (
-                <HostView />
+                <HostView sessionCode={code} />
             ) : (
                 <ParticipantView />
             )}
