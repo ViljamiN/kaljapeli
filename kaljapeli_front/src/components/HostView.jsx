@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const HostView = ({ sessionCode }) => {
-    const [players, setPlayers] = useState(null);
+    const [players, setPlayers] = useState([]);
 
     const fetchParticipants = () => {
         axios
             .get(`http://localhost:5000/get_participants?code=${sessionCode}`)
             .then((response) => {
-                console.log(response.data.participants);
                 setPlayers(response.data.participants);
             })
             .catch((error) => {
@@ -28,6 +27,17 @@ const HostView = ({ sessionCode }) => {
             });
     };
 
+    const handleKickPlayer = (player) => {
+        axios
+            .post("http://localhost:5000/remove_participant", { code: sessionCode, player })
+            .then((response) => {
+                console.log(response.data.message);
+            })
+            .catch((error) => {
+                console.error("Error removing player:", error);
+            });
+    };
+
     useEffect(() => {
         fetchParticipants();
         const intervalId = setInterval(fetchParticipants, 5000);
@@ -37,23 +47,21 @@ const HostView = ({ sessionCode }) => {
     return (
         <div>
             <h1>You are hosting a Minute Beer</h1>
-            {!players ? (
+            {players.length < 1 ? (
                 <p>No players have joined yet.</p>
             ) : (
-                (console.log(players),
-                (
-                    <div>
-                        <h2>Players:</h2>
-                        <ul>
-                            {players.map((player) => (
-                                <li key={player}>{player}</li>
-                            ))}
-                        </ul>
-                        // when the host clicks this button, the game will start and the players will be redirected to
-                        the game view
-                        <button onClick={handleStartGame}>Start session</button>
-                    </div>
-                ))
+                <div>
+                    <h2>Players:</h2>
+                    <ul>
+                        {players.map((player) => (
+                            <li key={player}>
+                                {player}
+                                <button onClick={() => handleKickPlayer(player)}>X</button>
+                            </li>
+                        ))}
+                    </ul>
+                    <button onClick={handleStartGame}>Start Game</button>
+                </div>
             )}
         </div>
     );

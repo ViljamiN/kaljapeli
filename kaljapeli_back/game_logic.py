@@ -6,9 +6,9 @@ OPTIMIZED_BAC = 2
 
 
 class Timer:
-
     start_time = 1
     round_time = 1
+    game_time = 60
 
     def reset_clock():
         Timer.start_time = time()
@@ -20,8 +20,7 @@ class Timer:
         return time() - Timer.start_time
 
 
-class BasicLogic():
-
+class BasicLogic:
     def __init__(self, players):
         self.counter_text = ""
         self.players = players
@@ -44,58 +43,46 @@ class BasicLogic():
         self.some_drinking_to_do = True
 
 
-class MinuteBeerModeLehtisaari(BasicLogic):
+class ClassicMinuteBeerMode(BasicLogic):
     # This class is a subclass of BasicLogic
     # each minute every players drink 1 shot of beer.
     # when drinking is done, the bac is calculated and the players are sorted by bac
 
-    def __init__(self, players):
+    def __init__(self, session_code, players):
         super().__init__(players)
-        self.game_id = MINUTE_BEER_LEHTISAARI
+        self.game_id = session_code
         self.game_message_text = ""
+        self.game_over = False
+
+    # This method updates the game state based on the time left in the round
 
     def update_game(self):
         round_left = Timer.round_time_left()
 
         if (round_left <= 5):
+            # if there is less than 5 seconds left in the round, update the counter
             self.update_counter(round_left)
             self.game_message_text = ""
         elif (round_left >= Timer.round_time - 5):
+            # if there is more than 55 seconds left in the round, drink
             self.counter_text = ""
             self.game_message_text = "Juokaa prkl"
             if self.some_drinking_to_do:
+                # if there is still drinking to do, drink
                 self.players_drink(self.players)
-        else:
-            self.game_message_text = ""
-
-
-class ClassicMinuteBeerMode(BasicLogic):
-
-    def __init__(self, players):
-        super().__init__(players)
-        self.game_id = MINUTE_BEER
-        self.game_message_text = ""
-
-    def update_game(self):
-        round_left = Timer.round_time_left()
-
-        if (round_left <= 5):
-            self.update_counter(round_left)
-            self.game_message_text = ""
-        elif (round_left >= Timer.round_time - 5):
-            self.counter_text = ""
-            self.game_message_text = "Juokaa prkl"
-            if self.some_drinking_to_do:
-                self.players_drink(self.players)
+                # also return a message to the host with the current minute count and the players sorted by bac
+                self.game_message_text = f"Minuutti {int((Timer.round_time - round_left) / 60) + 1}:\n" + "\n".join(
+                    [f"{p.name}: {p.bac:.2f}" for p in self.players])
+                return self.game_message_text
         else:
             self.game_message_text = ""
 
 
 class OptimizedBACMode(BasicLogic):
 
-    def __init__(self, players):
+    def __init__(self, session_code, players):
         super().__init__(players)
-        self.game_id = OPTIMIZED_BAC
+        self.game_id = session_code
         self.drinkers = []
         self.show_drinkers = False
 

@@ -9,7 +9,7 @@ function App() {
         name: "",
         weight: "",
         gender: "",
-        strength: "",
+        drink_strength: "",
     });
     const [code, setCode] = useState("");
     const [choice, setChoice] = useState("");
@@ -45,7 +45,12 @@ function App() {
             setError("Please enter a valid code.");
             return;
         }
-        if (!personalDetails.name || !personalDetails.weight || !personalDetails.gender || !personalDetails.strength) {
+        if (
+            !personalDetails.name ||
+            !personalDetails.weight ||
+            !personalDetails.gender ||
+            !personalDetails.drink_strength
+        ) {
             setError("Please fill in all personal details.");
             return;
         }
@@ -160,8 +165,8 @@ function App() {
                                     What is the strength of your beer? (%)
                                     <input
                                         type="number"
-                                        value={personalDetails.strength}
-                                        name="strength"
+                                        value={personalDetails.drink_strength}
+                                        name="drink_strength"
                                         onChange={handleInputChange}
                                     />
                                 </label>
