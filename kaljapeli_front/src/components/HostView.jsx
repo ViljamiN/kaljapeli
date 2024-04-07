@@ -44,24 +44,27 @@ const HostView = ({ sessionCode }) => {
         return () => clearInterval(intervalId);
     }, [sessionCode]);
 
+    //PLAYERS OBJECT is an object with keys as player ids and values as player objects
+    //player object has the following keys:
+    //alcohol_consumed, bac, color, drink_alc_perc, gender, gender_factor, id, name, time_left_drunk, weight
+
     return (
         <div>
             <h1>You are hosting a Minute Beer</h1>
-            {players.length < 1 ? (
+            {!Object.keys(players).length ? (
                 <p>No players have joined yet.</p>
             ) : (
-                <div>
+                <>
                     <h2>Players:</h2>
                     <ul>
-                        {players.map((player) => (
+                        {Object.keys(players).map((player) => (
                             <li key={player}>
-                                {player}
-                                <button onClick={() => handleKickPlayer(player)}>X</button>
+                                {players[player].name} <button onClick={() => handleKickPlayer(player)}>Kick</button>
                             </li>
                         ))}
                     </ul>
                     <button onClick={handleStartGame}>Start Game</button>
-                </div>
+                </>
             )}
         </div>
     );

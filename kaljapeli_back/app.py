@@ -74,12 +74,13 @@ def get_participants():
 def remove_participant():
     data = request.get_json()
     code = data.get('code')
-    participant_id = data.get('participant_id')
+    participant_id = data.get('player')
     if code not in sessions:
         return jsonify({'message': 'Session with code does not exist'}), 404
     else:
         participants = sessions[code]['participants']
         print(participants, participants_data)
+        print(participant_id)
 
         if participant_id in participants:
             del participants[participant_id]
