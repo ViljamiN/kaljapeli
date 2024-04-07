@@ -27,9 +27,9 @@ const HostView = ({ sessionCode }) => {
             });
     };
 
-    const handleKickPlayer = (player) => {
+    const handleKickPlayer = (playerId) => {
         axios
-            .post("http://localhost:5000/remove_participant", { code: sessionCode, player })
+            .post("http://localhost:5000/remove_participant", { code: sessionCode, playerId })
             .then((response) => {
                 console.log(response.data.message);
             })
@@ -44,10 +44,6 @@ const HostView = ({ sessionCode }) => {
         return () => clearInterval(intervalId);
     }, [sessionCode]);
 
-    //PLAYERS OBJECT is an object with keys as player ids and values as player objects
-    //player object has the following keys:
-    //alcohol_consumed, bac, color, drink_alc_perc, gender, gender_factor, id, name, time_left_drunk, weight
-
     return (
         <div>
             <h1>You are hosting a Minute Beer</h1>
@@ -57,9 +53,10 @@ const HostView = ({ sessionCode }) => {
                 <>
                     <h2>Players:</h2>
                     <ul>
-                        {Object.keys(players).map((player) => (
-                            <li key={player}>
-                                {players[player].name} <button onClick={() => handleKickPlayer(player)}>Kick</button>
+                        {Object.keys(players).map((playerId) => (
+                            <li key={playerId}>
+                                {players[playerId].name}{" "}
+                                <button onClick={() => handleKickPlayer(playerId)}>Kick</button>
                             </li>
                         ))}
                     </ul>

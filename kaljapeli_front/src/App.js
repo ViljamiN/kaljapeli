@@ -11,6 +11,7 @@ function App() {
         gender: "",
         drink_strength: "",
     });
+    const [playerId, setPlayerId] = useState(""); // State to hold player's ID
     const [code, setCode] = useState("");
     const [choice, setChoice] = useState("");
     const [error, setError] = useState("");
@@ -63,14 +64,15 @@ function App() {
             .then((response) => {
                 console.log(response.data.message);
                 setSessionJoined(true);
+                setPlayerId(response.data.participant_id); // Set player's ID
             })
             .catch((error) => {
-                if (error.response && error.response.status === 404) {
-                    setError("Session not found. Please enter a valid code.");
-                } else {
-                    setError("Error joining session. Please try again later.");
-                }
                 console.error("Error joining session:", error);
+                if (error.response && error.response.data && error.response.data.message) {
+                    setError("Error joining session. Details: " + error.response.data.message);
+                } else {
+                    setError("Unknown error. Please try again later.");
+                }
             });
     };
 
@@ -179,7 +181,10 @@ function App() {
             ) : hosting ? (
                 <HostView sessionCode={code} />
             ) : (
-                <ParticipantView />
+                <ParticipantView
+                    sessionCode={code}
+                    playerId={playerId}
+                />
             )}
         </div>
     );
