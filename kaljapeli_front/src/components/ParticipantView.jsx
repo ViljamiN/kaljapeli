@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
 
 const ParticipantView = ({ sessionCode, playerId }) => {
     const [started, setStarted] = useState(false);
-    const history = useHistory();
 
     const handleLeaveSession = () => {
         // Make a POST request to leave the session by using the remove_participant endpoint
@@ -13,12 +11,13 @@ const ParticipantView = ({ sessionCode, playerId }) => {
             .then((response) => {
                 console.log(response.data.message);
                 // Redirect to the home page
-                history.push("/");
+                window.location.href = "/";
             })
             .catch((error) => {
                 console.error("Error leaving session:", error);
             });
     };
+
     return (
         <div>
             <h1>You have joined the Minute Beer Session {sessionCode}</h1>
